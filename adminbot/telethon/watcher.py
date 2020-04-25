@@ -32,7 +32,7 @@ async def autoban_in_watch_chats(event):
                     send_messages=False,
                 )
 
-                await event.respond(f"(Bot) Banned user {user.id}")
+                await event.respond(f"(Bot) Auto-banned user {user.id}")
         except Exception as e:
             print(e)
         finally:

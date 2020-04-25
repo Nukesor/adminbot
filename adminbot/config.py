@@ -9,10 +9,7 @@ default_config = {
         "app_api_id": 0,
         "app_api_hash": "apihash",
     },
-    "bot": {
-        "admin": "27755184",
-        "watched_chats": [],
-    },
+    "bot": {"admin": "27755184", "watched_chats": [],},
     "database": {
         "pollbot_sql_uri": "",
         "pollbot_connection_count": 5,

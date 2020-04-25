@@ -33,7 +33,7 @@ async def ban_user(event):
     except Exception as e:
         print(e)
 
-    await event.edit(f'Banned user {reply_message.from_id}')
+    await event.edit(f"(Bot) Banned user {reply_message.from_id}")
 
 
 @bot.on(
@@ -58,7 +58,7 @@ async def ban_user(event):
     except Exception as e:
         print(e)
 
-    await event.edit(f'Unbanned user {reply_message.from_id}')
+    await event.edit(f"(Bot) Unbanned user {reply_message.from_id}")
 
 
 @bot.on(
@@ -72,13 +72,15 @@ async def ban_user(event):
 async def watch_chat(event):
     """Watch a specific chat for banned users from my bots."""
 
-    if event.message.chat_id in config['bot']['watched_chats']:
-        config['bot']['watched_chats'].remove(event.message.chat_id)
+    if event.message.chat_id in config["bot"]["watched_chats"]:
+        config["bot"]["watched_chats"].remove(event.message.chat_id)
         save_config(config)
-        await event.respond(f'Chat is no longer being monitored')
+        await event.respond(
+            f"(Bot) Chat {event.message.chat_id} is no longer being monitored"
+        )
         return
 
-    config['bot']['watched_chats'].append(event.message.chat_id)
+    config["bot"]["watched_chats"].append(event.message.chat_id)
     save_config(config)
 
-    await event.respond(f'Chat is now being monitored')
+    await event.respond(f"(Bot) Chat {event.message.chat_id} is now being monitored")

@@ -18,6 +18,6 @@ from adminbot.telethon.helper import log, get_peer_information
 async def print_id(event):
     """Print the current chat id and type for debugging."""
     chat_id, peer_type = get_peer_information(event.message.to_id)
-    message = f"Chat type: {peer_type}, chat id: {chat_id}"
+    message = f"(Bot) Chat type: {peer_type}, chat id: {chat_id}"
 
     await event.respond(message)

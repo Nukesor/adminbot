@@ -2,7 +2,7 @@ from telethon import functions, events
 
 from adminbot.db import get_pollbot_session
 from adminbot.config import config, config_path, save_config
-from adminbot.models.pollbot_user import PollbotUser
+from adminbot.models import PollbotUser, PollbotUserStat
 from adminbot.telethon import bot
 from adminbot.telethon.misc import log, get_peer_information
 
@@ -40,7 +40,7 @@ async def autoban_in_watch_chats(event):
 
 
 @bot.on(events.ChatAction())
-async def autoblock_private_chats(event):
+async def autoblock_in_private_chats(event):
     """Automatically block banned users that contact me via PM."""
     # A new chat has to be created and it has to be private
     if not (event.created and event.is_private):
@@ -64,6 +64,18 @@ async def autoblock_private_chats(event):
             )
             await event.respond(message)
             # await bot(functions.contacts.BlockRequest(id=event.user_id))
+
+        stat = session.query(PollbotUserStat).get((date.today(), user))
+        if stat.votes >= 250:
+            message = (
+                "Hi! This is an automated message.\n"
+                "You have been temporarily banned from @ultimate_pollbot\n"
+                "Users are automatically banned if they spam and reach the vote limit.\n"
+                "Continue spamming and you'll be banned permanently.\n"
+                "If you think this is a bug, please don't PM me, but rather read my bio and go to my support channel.\n"
+            )
+            await event.respond(message)
+
 
     except Exception as e:
         print(e)

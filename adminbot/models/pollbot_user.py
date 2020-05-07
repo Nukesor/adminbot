@@ -27,6 +27,7 @@ class PollbotUser(pollbot_base):
     # Flags
     started = Column(Boolean, nullable=False, default=False)
     banned = Column(Boolean, nullable=False, default=False, server_default="FALSE")
+    deleted = Column(Boolean, nullable=False, default=False, server_default="FALSE")
     broadcast_sent = Column(Boolean, nullable=False, default=False)
     last_update = Column(DateTime)
 
@@ -46,11 +47,13 @@ class PollbotUser(pollbot_base):
     expected_input = Column(String)
 
     # Simple foreign key
-    current_poll_id = Column(
-        BigInteger,
-        ForeignKey("poll.id", ondelete="set null", name="current_poll"),
-        index=True,
-    )
+    current_poll_id = Column(BigInteger, index=True)
+
+    def __init__(self, user_id, username):
+        """Create a new user."""
+        self.id = user_id
+        if username is not None:
+            self.username = username.lower()
 
     def __repr__(self):
         """Print as string."""

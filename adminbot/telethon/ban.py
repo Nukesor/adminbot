@@ -44,8 +44,8 @@ async def ban_user(event):
         from_users=config["bot"]["admin"],
     )
 )
-async def ban_user(event):
-    """Ban a user from the current group."""
+async def unban_user(event):
+    """Unban a user from the current group."""
     reply_id = event.message.reply_to_msg_id
     if reply_id is None:
         return

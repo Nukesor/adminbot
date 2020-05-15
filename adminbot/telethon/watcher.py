@@ -16,6 +16,9 @@ async def autoban_in_watch_chats(event):
 
     # Check if they joined a watched chat
     if event.chat_id in config["bot"]["watched_chats"]:
+        print("Got new user in watched chat:")
+        print(event)
+
         session = get_pollbot_session()
         try:
             # Check if we know the user
@@ -23,8 +26,8 @@ async def autoban_in_watch_chats(event):
             if user is None:
                 return
 
-            # If the user is perma-banned in the pollbot, ban them
-            if user.banned:
+            # If the user is perma-banned or deleted in the pollbot, ban them
+            if user.banned or user.deleted:
                 await bot.edit_permissions(
                     event.chat_id,
                     event.user_id,
@@ -32,7 +35,7 @@ async def autoban_in_watch_chats(event):
                     send_messages=False,
                 )
 
-                await event.respond(f"(Bot) Auto-banned user {user.id}")
+                await event.respond(f"(Bot) Removed banned user {user.id} (UPB user)")
         except Exception as e:
             print(e)
         finally:

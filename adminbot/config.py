@@ -20,15 +20,16 @@ default_config = {
 
 config_path = os.path.expanduser("~/.config/adminbot.toml")
 
+
+def save_config(config):
+    """Save the config to disk."""
+    with open(config_path, "w") as file_descriptor:
+        toml.dump(config, file_descriptor)
+
+
 if not os.path.exists(config_path):
     save_config(default_config)
     print("Please adjust the configuration file at '~/.config/adminbot.toml'")
     sys.exit(1)
 else:
     config = toml.load(config_path)
-
-
-def save_config(config):
-    """Save the config to disk."""
-    with open(config_path, "w") as file_descriptor:
-        toml.dump(config, file_descriptor)

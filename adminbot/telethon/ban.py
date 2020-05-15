@@ -1,9 +1,8 @@
 """Auto-ban logic ."""
 from telethon import events
 
-from adminbot.config import config, config_path, save_config
+from adminbot.config import config, save_config
 from adminbot.telethon import bot
-from adminbot.telethon.misc import log, get_peer_information
 
 
 @bot.on(

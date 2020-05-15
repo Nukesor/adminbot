@@ -1,10 +1,10 @@
-from telethon import functions, events
+from telethon import events
+from datetime import date
 
 from adminbot.db import get_pollbot_session
-from adminbot.config import config, config_path, save_config
+from adminbot.config import config
 from adminbot.models import PollbotUser, PollbotUserStat
 from adminbot.telethon import bot
-from adminbot.telethon.misc import log, get_peer_information
 
 
 @bot.on(events.ChatAction)
@@ -46,15 +46,31 @@ async def autoblock_in_private_chats(event):
     if not (event.created and event.is_private):
         return
 
+    print("Got new private chat:")
+    print(event)
     session = get_pollbot_session()
     try:
         # Check if we know the user
         user = session.query(PollbotUser).get(event.user_id)
         if user is None:
+            print("User isn't a pollbot user: {}", event.user_id)
             return
+
+        if user.deleted:
+            print("User is deleted")
+            message = (
+                "Hi! This is an automated message.\n"
+                "Your @ultimate_pollbot account has been permanently deleted.\n"
+                "This action is irrevertible to protect against vote manipulation.\n"
+                "Think about hosting your own bot.\n"
+                "I won't see any messages you're writing, this is a completely automated account."
+            )
+            await event.respond(message)
+            # await bot(functions.contacts.BlockRequest(id=event.user_id))
 
         # If the user is perma-banned in the pollbot, block them
         if user.banned:
+            print("User is banned")
             message = (
                 "Hi! This is an automated message.\n"
                 "You have been banned from @ultimate_pollbot\n"
@@ -67,6 +83,7 @@ async def autoblock_in_private_chats(event):
 
         stat = session.query(PollbotUserStat).get((date.today(), user))
         if stat.votes >= 250:
+            print("User is temp banned")
             message = (
                 "Hi! This is an automated message.\n"
                 "You have been temporarily banned from @ultimate_pollbot\n"
@@ -75,7 +92,6 @@ async def autoblock_in_private_chats(event):
                 "If you think this is a bug, please don't PM me, but rather read my bio and go to my support channel.\n"
             )
             await event.respond(message)
-
 
     except Exception as e:
         print(e)

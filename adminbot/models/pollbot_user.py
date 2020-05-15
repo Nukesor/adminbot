@@ -3,15 +3,12 @@ from sqlalchemy import (
     Boolean,
     Column,
     func,
-    ForeignKey,
 )
 from sqlalchemy.types import (
     BigInteger,
     DateTime,
     String,
 )
-from sqlalchemy.orm import relationship
-
 from adminbot.db import pollbot_base
 
 

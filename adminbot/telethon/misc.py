@@ -1,10 +1,9 @@
 """Simple handy helper functions."""
-import toml
 from telethon import events
 
-from adminbot.config import config, config_path
+from adminbot.config import config
 from adminbot.telethon import bot
-from adminbot.telethon.helper import log, get_peer_information
+from adminbot.telethon.helper import get_peer_information
 
 
 @bot.on(

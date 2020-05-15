@@ -1,7 +1,7 @@
 """Helper functions for handling telethon stuff."""
 from telethon import types
 
-from adminbot.telethon import bot
+from adminbot.config import config
 
 
 def log(message):

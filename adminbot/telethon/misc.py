@@ -39,5 +39,5 @@ async def default_feature_request(event):
         "In case somebody comes up with some nice concept and code, feel free to create a pull request. I'll then consider adding it to the pollbot :)"
     )
 
-    event.message.delete()
+    await event.message.delete()
     await event.respond(message)

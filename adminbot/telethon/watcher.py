@@ -1,13 +1,39 @@
+"""Telegram auto ban logic."""
 from telethon import events
 from datetime import date
 
 from adminbot.db import get_pollbot_session
-from adminbot.config import config
-from adminbot.models import PollbotUser, PollbotUserStat
+from adminbot.config import config, save_config
+from adminbot.models import PollbotUser, PollbotUserStatistic
+from adminbot.sentry import handle_exceptions
 from adminbot.telethon import bot
 
 
+@bot.on(
+    events.NewMessage(
+        pattern="\\\\watch",
+        outgoing=True,
+        forwards=False,
+        from_users=config["bot"]["admin"],
+    )
+)
+@handle_exceptions
+async def watch_chat(event):
+    """Watch a specific chat for banned users from my bots."""
+    if event.message.chat_id in config["bot"]["watched_chats"]:
+        config["bot"]["watched_chats"].remove(event.message.chat_id)
+        save_config(config)
+        await event.respond(f"(Bot) Chat {event.message.chat_id} is no longer watched")
+        return
+
+    config["bot"]["watched_chats"].append(event.message.chat_id)
+    save_config(config)
+
+    await event.respond(f"(Bot) Chat {event.message.chat_id} is now under my watch")
+
+
 @bot.on(events.ChatAction)
+@handle_exceptions
 async def autoban_in_watch_chats(event):
     """Users that are banned in a bot, get auto-banned in watched chats."""
     # Only listen for new users to join
@@ -36,13 +62,12 @@ async def autoban_in_watch_chats(event):
                 )
 
                 await event.respond(f"(Bot) Removed banned user {user.id} (UPB user)")
-        except Exception as e:
-            print(e)
         finally:
             session.close()
 
 
-@bot.on(events.ChatAction())
+@bot.on(events.ChatAction)
+@handle_exceptions
 async def autoblock_in_private_chats(event):
     """Automatically block banned users that contact me via PM."""
     # A new chat has to be created and it has to be private
@@ -64,8 +89,8 @@ async def autoblock_in_private_chats(event):
             message = (
                 "Hi! This is an automated message.\n"
                 "Your @ultimate_pollbot account has been permanently deleted.\n"
-                "This action is irrevertible to protect against vote manipulation.\n"
-                "Think about hosting your own bot.\n"
+                "I'm sorry, but this action is irrevertible. It's necessary to protect against vote manipulation.\n"
+                "Your best solution is probably to host your own bot.\n"
                 "I won't see any messages you're writing, this is a completely automated account."
             )
             await event.respond(message)
@@ -76,7 +101,7 @@ async def autoblock_in_private_chats(event):
             print("User is banned")
             message = (
                 "Hi! This is an automated message.\n"
-                "You have been banned from @ultimate_pollbot\n"
+                "You have been banned from @ultimate_pollbot!\n"
                 "Users are automatically banned if they reach the vote limit for 3 days in the last week.\n"
                 "The ban is irrevertible and permanent.\n"
                 "You have been warned. Think about hosting your own bot."
@@ -84,19 +109,17 @@ async def autoblock_in_private_chats(event):
             await event.respond(message)
             # await bot(functions.contacts.BlockRequest(id=event.user_id))
 
-        stat = session.query(PollbotUserStat).get((date.today(), user))
+        stat = session.query(PollbotUserStatistic).get((date.today(), user))
         if stat.votes >= 250:
             print("User is temp banned")
             message = (
                 "Hi! This is an automated message.\n"
-                "You have been temporarily banned from @ultimate_pollbot\n"
+                "You have been temporarily banned from @ultimate_pollbot!\n"
                 "Users are automatically banned if they spam and reach the vote limit.\n"
                 "Continue spamming and you'll be banned permanently.\n"
                 "If you think this is a bug, please don't PM me, but rather read my bio and go to my support channel.\n"
             )
             await event.respond(message)
 
-    except Exception as e:
-        print(e)
     finally:
         session.close()

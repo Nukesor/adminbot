@@ -8,12 +8,11 @@ from sqlalchemy.types import (
     Integer,
     String,
 )
-from sqlalchemy.orm import relationship
 
 from adminbot.db import pollbot_base
 
 
-class PollbotUserStat(pollbot_base):
+class PollbotUserStatistic(pollbot_base):
     """Statistics for user activity.
 
     We need to track at least some user activity, since there seem to be some users which
@@ -41,7 +40,6 @@ class PollbotUserStat(pollbot_base):
         index=True,
         primary_key=True,
     )
-    user = relationship("User", foreign_keys="UserStatistic.user_id")
 
     def __init__(self, user):
         """Create a new dialy statistic."""

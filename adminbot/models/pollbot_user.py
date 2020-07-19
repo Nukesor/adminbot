@@ -9,6 +9,7 @@ from sqlalchemy.types import (
     DateTime,
     String,
 )
+from sqlalchemy.orm import relationship
 from adminbot.db import pollbot_base
 
 

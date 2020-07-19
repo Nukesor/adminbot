@@ -1,7 +1,8 @@
-"""Auto-ban logic ."""
+"""Manual ban logic."""
 from telethon import events
 
-from adminbot.config import config, save_config
+from adminbot.config import config
+from adminbot.sentry import handle_exceptions
 from adminbot.telethon import bot
 
 
@@ -13,6 +14,7 @@ from adminbot.telethon import bot
         from_users=config["bot"]["admin"],
     )
 )
+@handle_exceptions
 async def ban_user(event):
     """Ban a user from the current group."""
     reply_id = event.message.reply_to_msg_id
@@ -21,16 +23,13 @@ async def ban_user(event):
 
     reply_message = await bot.get_messages(event.message.chat_id, ids=reply_id)
 
-    try:
-        # Ban this specific user
-        await bot.edit_permissions(
-            event.message.chat_id,
-            reply_message.from_id,
-            view_messages=False,
-            send_messages=False,
-        )
-    except Exception as e:
-        print(e)
+    # Ban this specific user
+    await bot.edit_permissions(
+        event.message.chat_id,
+        reply_message.from_id,
+        view_messages=False,
+        send_messages=False,
+    )
 
     await event.edit(f"(Bot) Banned user {reply_message.from_id}")
 
@@ -43,6 +42,7 @@ async def ban_user(event):
         from_users=config["bot"]["admin"],
     )
 )
+@handle_exceptions
 async def unban_user(event):
     """Unban a user from the current group."""
     reply_id = event.message.reply_to_msg_id
@@ -51,35 +51,7 @@ async def unban_user(event):
 
     reply_message = await bot.get_messages(event.message.chat_id, ids=reply_id)
 
-    try:
-        # Ban this specific user
-        await bot.edit_permissions(event.message.chat_id, reply_message.from_id)
-    except Exception as e:
-        print(e)
+    # Ban this specific user
+    await bot.edit_permissions(event.message.chat_id, reply_message.from_id)
 
     await event.edit(f"(Bot) Unbanned user {reply_message.from_id}")
-
-
-@bot.on(
-    events.NewMessage(
-        pattern="\\\\watch",
-        outgoing=True,
-        forwards=False,
-        from_users=config["bot"]["admin"],
-    )
-)
-async def watch_chat(event):
-    """Watch a specific chat for banned users from my bots."""
-
-    if event.message.chat_id in config["bot"]["watched_chats"]:
-        config["bot"]["watched_chats"].remove(event.message.chat_id)
-        save_config(config)
-        await event.respond(
-            f"(Bot) Chat {event.message.chat_id} is no longer being monitored"
-        )
-        return
-
-    config["bot"]["watched_chats"].append(event.message.chat_id)
-    save_config(config)
-
-    await event.respond(f"(Bot) Chat {event.message.chat_id} is now being monitored")

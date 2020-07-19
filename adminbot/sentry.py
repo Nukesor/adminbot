@@ -1,4 +1,5 @@
 """Simple wrapper around sentry that allows for lazy initilization."""
+import traceback
 from raven import Client
 from adminbot.config import config
 
@@ -48,7 +49,9 @@ def handle_exceptions(func):
         try:
             await func(*args, **kwargs)
         except Exception as e:
-            print(e)
+            if config["logging"]["debug"]:
+                traceback.print_exc()
+
             sentry.captureException(e)
 
     return wrapper

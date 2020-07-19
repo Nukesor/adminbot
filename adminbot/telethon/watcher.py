@@ -5,7 +5,7 @@ from datetime import date
 from adminbot.db import get_pollbot_session
 from adminbot.config import config, save_config
 from adminbot.models import PollbotUser, PollbotUserStatistic
-from adminbot.sentry import handle_exceptions
+from adminbot.sentry import sentry, handle_exceptions
 from adminbot.telethon import bot
 
 
@@ -42,8 +42,9 @@ async def autoban_in_watch_chats(event):
 
     # Check if they joined a watched chat
     if event.chat_id in config["bot"]["watched_chats"]:
-        print("Got new user in watched chat:")
-        print(event)
+        sentry.captureMessage(
+            "Got new user in watched chat:", data={"event": event.__str__()}
+        )
 
         session = get_pollbot_session()
         try:
@@ -74,18 +75,15 @@ async def autoblock_in_private_chats(event):
     if not (event.created and event.is_private):
         return
 
-    print("Got new private chat:")
-    print(event)
+    sentry.captureMessage("Got new private chat", data={"event": event.__str__()})
     session = get_pollbot_session()
     try:
         # Check if we know the user
         user = session.query(PollbotUser).get(event.user_id)
         if user is None:
-            print("User isn't a pollbot user: {}", event.user_id)
             return
 
         if user.deleted:
-            print("User is deleted")
             message = (
                 "Hi! This is an automated message.\n"
                 "Your @ultimate_pollbot account has been permanently deleted.\n"
@@ -98,7 +96,6 @@ async def autoblock_in_private_chats(event):
 
         # If the user is perma-banned in the pollbot, block them
         if user.banned:
-            print("User is banned")
             message = (
                 "Hi! This is an automated message.\n"
                 "You have been banned from @ultimate_pollbot!\n"
@@ -111,7 +108,6 @@ async def autoblock_in_private_chats(event):
 
         stat = session.query(PollbotUserStatistic).get((date.today(), user))
         if stat.votes >= 250:
-            print("User is temp banned")
             message = (
                 "Hi! This is an automated message.\n"
                 "You have been temporarily banned from @ultimate_pollbot!\n"

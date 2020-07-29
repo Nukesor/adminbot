@@ -62,7 +62,9 @@ async def autoban_in_watch_chats(event):
                     send_messages=False,
                 )
 
-                await event.respond(f"(Bot) Removed banned user {user.id} (UPB user)")
+                await event.respond(
+                    f"(Bot) Removed banned/deleted user {user.id} (UPB user)"
+                )
         finally:
             session.close()
 

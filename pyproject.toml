@@ -14,7 +14,7 @@ alembic = "&1"
 telethon = "^1"
 
 SQLAlchemy = "^1"
-sqlalchemy-utils = "^0"
+sqlalchemy-utils = "^0.37"
 psycopg2-binary = "^2"
 
 toml = "^0.10"

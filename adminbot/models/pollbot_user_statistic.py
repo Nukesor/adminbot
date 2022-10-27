@@ -1,13 +1,8 @@
 """The sqlalchemy model for a user statistics."""
 from datetime import date
-from sqlalchemy import Column, Date, func, ForeignKey, UniqueConstraint
-from sqlalchemy.types import (
-    BigInteger,
-    Boolean,
-    DateTime,
-    Integer,
-    String,
-)
+
+from sqlalchemy import Column, Date, ForeignKey
+from sqlalchemy.types import BigInteger, Integer
 
 from adminbot.db import pollbot_base
 

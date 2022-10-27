@@ -1,6 +1,8 @@
 """Simple wrapper around sentry that allows for lazy initilization."""
 import traceback
+
 from raven import Client
+
 from adminbot.config import config
 
 

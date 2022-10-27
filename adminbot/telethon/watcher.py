@@ -1,11 +1,12 @@
 """Telegram auto ban logic."""
-from telethon import events
 from datetime import date
 
-from adminbot.db import get_pollbot_session
+from telethon import events
+
 from adminbot.config import config, save_config
+from adminbot.db import get_pollbot_session
 from adminbot.models import PollbotUser, PollbotUserStatistic
-from adminbot.sentry import sentry, handle_exceptions
+from adminbot.sentry import handle_exceptions, sentry
 from adminbot.telethon import bot
 
 

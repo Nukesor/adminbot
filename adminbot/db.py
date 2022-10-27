@@ -1,9 +1,10 @@
 """Helper class to get a database engine and to get a session."""
-from adminbot.config import config
 from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm.session import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+
+from adminbot.config import config
 
 pollbot_engine = create_engine(
     config["database"]["pollbot_sql_uri"],

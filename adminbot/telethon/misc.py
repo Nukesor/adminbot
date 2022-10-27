@@ -11,7 +11,9 @@ from adminbot.telethon.helper import get_peer_information
 
 @bot.on(
     events.NewMessage(
-        pattern="\\\\id", forwards=False, from_users=config["bot"]["admin"],
+        pattern="\\\\id",
+        forwards=False,
+        from_users=config["bot"]["admin"],
     )
 )
 @handle_exceptions
@@ -40,7 +42,9 @@ async def print_id(event):
 
 @bot.on(
     events.NewMessage(
-        pattern="\\\\default", forwards=False, from_users=config["bot"]["admin"],
+        pattern="\\\\default",
+        forwards=False,
+        from_users=config["bot"]["admin"],
     )
 )
 @handle_exceptions
@@ -58,7 +62,9 @@ async def default_feature_request(event):
 
 @bot.on(
     events.NewMessage(
-        pattern="\\\\check", forwards=False, from_users=config["bot"]["admin"],
+        pattern="\\\\check",
+        forwards=False,
+        from_users=config["bot"]["admin"],
     )
 )
 @handle_exceptions

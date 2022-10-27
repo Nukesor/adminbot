@@ -1,9 +1,6 @@
 """Helper functions for handling telethon stuff."""
 from telethon import types
 
-from adminbot.config import config
-from adminbot.telethon import bot
-
 
 def get_peer_information(peer):
     """Get the id depending on the chat type."""

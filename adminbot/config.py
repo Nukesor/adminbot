@@ -12,7 +12,6 @@ default_config = {
     },
     "bot": {
         "admin": "27755184",
-        "watched_chats": [],
     },
     "database": {
         "pollbot_sql_uri": "",

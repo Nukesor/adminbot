@@ -8,7 +8,6 @@ repository = "https://github.com/nukesor/admin-bot"
 
 [tool.poetry.dependencies]
 alembic = "^1"
-psycopg2-binary = "^2"
 python = "^3.10"
 raven = "^6"
 telethon = "^1"

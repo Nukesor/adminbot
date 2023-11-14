@@ -36,3 +36,25 @@ async def print_id(event):
     )
 
     await event.edit(response)
+
+
+@bot.on(
+    events.NewMessage(
+        pattern="\\\\message_id",
+        forwards=False,
+        from_users=config["bot"]["admin"],
+    )
+)
+@handle_exceptions
+async def print_id(event):
+    """Print the current chat id and type for debugging."""
+    message = event.message
+    reply_id = message.reply_to_msg_id
+
+    if reply_id is None:
+        response = "You have to reply to a message"
+    else:
+        referenced_message = await bot.get_messages(event.message.chat_id, ids=reply_id)
+        response = f"Message id is: {referenced_message.id}"
+
+    await event.edit(response)

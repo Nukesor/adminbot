@@ -1,5 +1,6 @@
 """Simple helper functions."""
 import os
+import sys
 import subprocess
 import uuid
 
@@ -10,6 +11,10 @@ from adminbot.sentry import handle_exceptions
 from adminbot.telethon import bot
 
 temp_dir = "/tmp/telegram-text-to-speech"
+
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
 
 
 @bot.on(events.NewMessage())
@@ -52,9 +57,9 @@ async def speech_to_text(event):
         ["ffmpeg", "-i", ogg_path, "-ar", "16000", wav_path], capture_output=True
     )
     if transcode_output.returncode != 0:
-        print("Detection failed!")
-        print("Stdout: {}".format(transcode_output.stdout.decode("utf-8")))
-        print("Stderr: {}".format(transcode_output.stderr.decode("utf-8")))
+        eprint("Detection failed!")
+        eprint("Stdout: {}".format(transcode_output.stdout.decode("utf-8")))
+        eprint("Stderr: {}".format(transcode_output.stderr.decode("utf-8")))
         return
 
     # Transcoding is done, we can clean up the ogg file.
@@ -74,9 +79,9 @@ async def speech_to_text(event):
         capture_output=True,
     )
     if detection_output.returncode != 0:
-        print("Detection failed!")
-        print("Stdout: {}".format(detection_output.stdout.decode("utf-8")))
-        print("Stderr: {}".format(detection_output.stderr.decode("utf-8")))
+        eprint("Detection failed!")
+        eprint("Stdout: {}".format(detection_output.stdout.decode("utf-8")))
+        eprint("Stderr: {}".format(detection_output.stderr.decode("utf-8")))
         return
     # Detection is done, we can clean up the wav file.
     os.remove(wav_path)

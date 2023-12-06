@@ -14,3 +14,4 @@ bot = TelegramClient(
 # Reexport for easy bot initialization
 from .misc import *
 from .ban import *
+from .speech_to_text import *

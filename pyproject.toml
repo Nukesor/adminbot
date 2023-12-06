@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "Nukes-admin-bot"
+name = "adminbot"
 version = "0.0.1"
 description = "Simple bot that helps me administrate my chats."
 authors = ["Arne Beer <contact@arne.beer>"]

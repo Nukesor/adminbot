@@ -10,6 +10,10 @@ default_config = {
         "app_api_id": 0,
         "app_api_hash": "apihash",
     },
+    "speech_to_text": {
+        "path_to_binary": "main",
+        "path_to_model": "/tmp/german.bin",
+    },
     "bot": {
         "admin": "27755184",
     },

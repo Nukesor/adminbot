@@ -52,7 +52,11 @@ async def speech_to_text(event):
         ["ffmpeg", "-i", ogg_path, "-ar", "16000", wav_path], capture_output=True
     )
     if transcode_output.returncode != 0:
-        raise Exception("Transcode failed")
+        print("Detection failed!")
+        print("Stdout: {}".format(transcode_output.stdout.decode("utf-8")))
+        print("Stderr: {}".format(transcode_output.stderr.decode("utf-8")))
+        return
+
     # Transcoding is done, we can clean up the ogg file.
     os.remove(ogg_path)
 
@@ -70,7 +74,10 @@ async def speech_to_text(event):
         capture_output=True,
     )
     if detection_output.returncode != 0:
-        raise Exception("Detection failed")
+        print("Detection failed!")
+        print("Stdout: {}".format(detection_output.stdout.decode("utf-8")))
+        print("Stderr: {}".format(detection_output.stderr.decode("utf-8")))
+        return
     # Detection is done, we can clean up the wav file.
     os.remove(wav_path)
 

@@ -31,7 +31,7 @@ async def speech_to_text(event):
 
     # Try to detect text
     # Return early if something went wrong.
-    output = detect_text(message)
+    output = await detect_text(message)
     if output is None:
         return
 

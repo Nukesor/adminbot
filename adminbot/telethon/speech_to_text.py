@@ -4,7 +4,7 @@ import sys
 import subprocess
 import uuid
 
-from telethon import events, types
+from telethon import events, types, Message
 
 from adminbot.config import config
 from adminbot.sentry import handle_exceptions
@@ -23,23 +23,31 @@ async def speech_to_text(event):
     """Print the current chat id and type for debugging."""
     message = event.message
 
-    # Don't read messages in non private chats
-    if not message.is_private:
+    # Ignore non-private and non-audio messages.
+    if not message.is_private or not is_audio_message(message):
         return
 
-    # We're only interested in audio messages
-    if message.document is None:
+    print(f"Got audio message from private chat")
+
+    # Try to detect text
+    # Return early if something went wrong.
+    output = detect_text(message)
+    if output is None:
         return
 
-    # Check if there an audio document in here.
-    if not any(
-        type(attribute) is types.DocumentAttributeAudio
-        for attribute in message.document.attributes
-    ):
-        return
+    print(f"Detection finished, detected the following text:\n{output}")
+    response = f"Speech-to-text detection:\n\n{output}"
 
-    print(f"Got audio message from chat {message.from_id}")
+    await event.reply(response)
 
+
+async def detect_text(message: Message) -> str | None:
+    """Run speech-to-text detection.
+
+    1. Download the audio from the message
+    2. Transfrom to 16khz WAV
+    3. Feed file into speech detector
+    """
     # Create the temp dir that's used for downloading and transcoding audio files.
     if not os.path.exists(temp_dir):
         os.mkdir(temp_dir)
@@ -85,12 +93,26 @@ async def speech_to_text(event):
         eprint("Stdout: {}".format(detection_output.stdout.decode("utf-8")))
         eprint("Stderr: {}".format(detection_output.stderr.decode("utf-8")))
         return
+
     # Detection is done, we can clean up the wav file.
     os.remove(wav_path)
 
-    # Parse output and build response
-    output = detection_output.stdout.decode("utf-8").strip()
-    print(f"Detection is finished, detected the following text:\n{output}")
-    response = f"Sprach zu Text detection:\n\n{output}"
+    # Return output
+    return detection_output.stdout.decode("utf-8").strip()
 
-    await event.reply(response)
+
+def is_audio_message(message: Message) -> bool:
+    """Make sure we got an audio message."""
+    # Audio messages are documents
+    if message.document is None:
+        return False
+
+    # Messages might have multiple document attributes.
+    # Look for the audio one.
+    if not any(
+        type(attribute) is types.DocumentAttributeAudio
+        for attribute in message.document.attributes
+    ):
+        return False
+
+    return True

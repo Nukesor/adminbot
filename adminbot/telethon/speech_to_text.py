@@ -70,11 +70,13 @@ async def speech_to_text(event):
     detection_output = subprocess.run(
         [
             config["speech_to_text"]["path_to_binary"],
-            "-m",
-            config["speech_to_text"]["path_to_model"],
-            "-f",
-            wav_path,
             "--no-timestamps",
+            "--language",
+            "auto",
+            "--model",
+            config["speech_to_text"]["path_to_model"],
+            "--file",
+            wav_path,
         ],
         capture_output=True,
     )

@@ -4,7 +4,7 @@ import sys
 import subprocess
 import uuid
 
-from telethon import events, types, Message
+from telethon import events, types
 
 from adminbot.config import config
 from adminbot.sentry import handle_exceptions
@@ -41,7 +41,7 @@ async def speech_to_text(event):
     await event.reply(response)
 
 
-async def detect_text(message: Message) -> str | None:
+async def detect_text(message) -> str | None:
     """Run speech-to-text detection.
 
     1. Download the audio from the message
@@ -101,7 +101,7 @@ async def detect_text(message: Message) -> str | None:
     return detection_output.stdout.decode("utf-8").strip()
 
 
-def is_audio_message(message: Message) -> bool:
+def is_audio_message(message) -> bool:
     """Make sure we got an audio message."""
     # Audio messages are documents
     if message.document is None:

@@ -91,10 +91,6 @@ async def speech_to_text(event):
     # Parse output and build response
     output = detection_output.stdout.decode("utf-8").strip()
     print(f"Detection is finished, detected the following text:\n{output}")
-    response = (
-        "Sprach zu Text detection:\n\n"
-        "{}"
-        "\n\nLass mal nen daumen hoch/runter da, je nachdem wie gut das funktioniert hat."
-    ).format(output)
+    response = f"Sprach zu Text detection:\n\n{output}"
 
     await event.reply(response)

@@ -3,15 +3,13 @@ import os
 import sys
 import subprocess
 import uuid
+import getpass
 
 from telethon import events, types
 
 from adminbot.config import config
 from adminbot.sentry import handle_exceptions
 from adminbot.telethon import bot
-
-temp_dir = "/tmp/telegram-text-to-speech"
-
 
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
@@ -48,6 +46,10 @@ async def detect_text(message) -> str | None:
     2. Transfrom to 16khz WAV
     3. Feed file into speech detector
     """
+    # Use a user-based temporary text-to-speech directory
+    username = getpass.getuser()
+    temp_dir = f"/tmp/telegram-text-to-speech-{username}"
+
     # Create the temp dir that's used for downloading and transcoding audio files.
     if not os.path.exists(temp_dir):
         os.mkdir(temp_dir)

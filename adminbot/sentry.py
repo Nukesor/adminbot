@@ -1,4 +1,5 @@
 """Simple wrapper around sentry that allows for lazy initilization."""
+
 import traceback
 
 from raven import Client
@@ -6,10 +7,11 @@ from raven import Client
 from adminbot.config import config
 
 
-class Sentry(object):
+class Sentry:
     """Sentry wrapper class that allows this app to work without a sentry token.
 
-    If no token is specified in the config, the messages used for logging are simply not called.
+    If no token is specified in the config, the messages used for logging
+    are simply not called.
     """
 
     initialized = False

@@ -1,4 +1,5 @@
 """Simple helper functions."""
+
 from telethon import events
 
 from adminbot.config import config
@@ -15,12 +16,13 @@ from adminbot.telethon.helper import get_peer_information
     )
 )
 @handle_exceptions
-async def print_id(event):
+async def print_chat_id(event):
     """Print the current chat id and type for debugging."""
     message = event.message
     reply_id = message.reply_to_msg_id
 
-    # If the command is a reply to a message, get information about the sender of the message.
+    # If the command is a reply to a message, get information
+    # about the sender of the message.
     if reply_id is not None:
         message = await bot.get_messages(event.message.chat_id, ids=reply_id)
         sender = await bot.get_input_entity(message.from_id)
@@ -46,7 +48,7 @@ async def print_id(event):
     )
 )
 @handle_exceptions
-async def print_id(event):
+async def print_message_id(event):
     """Print the current chat id and type for debugging."""
     message = event.message
     reply_id = message.reply_to_msg_id

@@ -1,15 +1,16 @@
 """Simple helper functions."""
-import os
-import sys
-import subprocess
-import uuid
 import getpass
+import os
+import subprocess
+import sys
+import uuid
 
 from telethon import events, types
 
 from adminbot.config import config
 from adminbot.sentry import handle_exceptions
 from adminbot.telethon import bot
+
 
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
@@ -25,7 +26,7 @@ async def speech_to_text(event):
     if not message.is_private or not is_audio_message(message):
         return
 
-    print(f"Got audio message from private chat")
+    print("Got audio message from private chat")
 
     # Try to detect text
     # Return early if something went wrong.

@@ -37,7 +37,7 @@ async def speech_to_text(event):
     print(f"Detection finished, detected the following text:\n{output}")
     response = f"Speech-to-text detection:\n\n{output}"
 
-    await event.reply(response)
+    await event.client.send_message('me', response)
 
 
 async def detect_text(message) -> str | None:

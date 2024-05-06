@@ -1,4 +1,5 @@
 """Manual ban logic."""
+
 from telethon import events
 
 from adminbot.config import config

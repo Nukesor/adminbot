@@ -1,4 +1,5 @@
 """Helper functions for handling telethon stuff."""
+
 from telethon import types
 
 

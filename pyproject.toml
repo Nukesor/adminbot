@@ -5,6 +5,7 @@ description = "Simple bot that helps me administrate my chats."
 authors = ["Arne Beer <contact@arne.beer>"]
 license = "MIT"
 repository = "https://github.com/nukesor/admin-bot"
+package-mode = false
 
 [tool.poetry.dependencies]
 alembic = "^1"

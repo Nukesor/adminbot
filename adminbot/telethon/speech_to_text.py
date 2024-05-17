@@ -39,9 +39,10 @@ async def speech_to_text(event):
     response = f"Speech-to-text detection:\n\n{output}"
 
     # Send speech-to-text message in the same chat for my own messages.
-    # However, send speech-to-text message for other people to my own saved messages folder.
-    # I don't want to scare them off.
-    if message.from_id == bot.get_me().id:
+    # However, send speech-to-text message for other people to my own saved messages
+    # folder. I don't want to scare them off.
+    me = await bot.get_me()
+    if message.from_id == me.id:
         await event.reply(response)
     else:
         await event.client.send_message("me", response)

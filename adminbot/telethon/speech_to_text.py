@@ -11,6 +11,7 @@ from telethon import events, types
 from adminbot.config import config
 from adminbot.sentry import handle_exceptions
 from adminbot.telethon import bot
+from adminbot.telethon.helper import get_peer_information
 
 
 def eprint(*args, **kwargs):
@@ -42,7 +43,8 @@ async def speech_to_text(event):
     # However, send speech-to-text message for other people to my own saved messages
     # folder. I don't want to scare them off.
     me = await bot.get_me()
-    if message.from_id == me.id:
+    peer_id, peer_type = get_peer_information(message.from_id)
+    if peer_id == me.id:
         await event.reply(response)
     else:
         await event.client.send_message("me", response)

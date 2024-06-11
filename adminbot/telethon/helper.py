@@ -3,7 +3,7 @@
 from telethon import types
 
 
-def get_peer_information(peer):
+def get_peer_information(peer: types.Peer):
     """Get the id depending on the chat type."""
     if isinstance(peer, types.PeerUser) or isinstance(peer, types.InputPeerUser):
         return peer.user_id, "user"
@@ -16,4 +16,4 @@ def get_peer_information(peer):
     elif isinstance(peer, types.InputPeerSelf):
         return "myself", "user"
     else:
-        raise Exception("Unknown chat type")
+        raise Exception(f"Unknown chat type: {peer} (Type: {type(peer)})")

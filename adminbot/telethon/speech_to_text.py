@@ -48,6 +48,7 @@ async def speech_to_text(event):
     # Just send the message to me in that case.
     if message.from_id is None:
         await event.client.send_message("me", response)
+        return
 
     peer_id, _ = get_peer_information(message.from_id)
     if peer_id == me.id or peer_id == "myself":

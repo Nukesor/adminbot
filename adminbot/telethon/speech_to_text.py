@@ -43,8 +43,14 @@ async def speech_to_text(event):
     # However, send speech-to-text message for other people to my own saved messages
     # folder. I don't want to scare them off.
     me = await bot.get_me()
-    peer_id, peer_type = get_peer_information(message.from_id)
-    if peer_id == me.id:
+
+    # Not sure why, but the `from_id` can sometimes be None.
+    # Just send the message to me in that case.
+    if message.from_id is None:
+        await event.client.send_message("me", response)
+
+    peer_id, _ = get_peer_information(message.from_id)
+    if peer_id == me.id or peer_id == "myself":
         await event.reply(response)
     else:
         await event.client.send_message("me", response)

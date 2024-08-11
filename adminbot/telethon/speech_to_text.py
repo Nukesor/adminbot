@@ -2,13 +2,12 @@
 
 import getpass
 import os
-import subprocess
 import sys
 import uuid
 
 from telethon import events, types
+import requests
 
-from adminbot.config import config
 from adminbot.sentry import handle_exceptions
 from adminbot.telethon import bot
 from adminbot.telethon.helper import get_peer_information
@@ -61,8 +60,7 @@ async def detect_text(message) -> str | None:
     """Run speech-to-text detection.
 
     1. Download the audio from the message
-    2. Transfrom to 16khz WAV
-    3. Feed file into speech detector
+    2. Send request to speech-to-text server
     """
     # Use a user-based temporary text-to-speech directory
     username = getpass.getuser()
@@ -72,53 +70,16 @@ async def detect_text(message) -> str | None:
     if not os.path.exists(temp_dir):
         os.mkdir(temp_dir)
 
-    filename = str(uuid.uuid4())
-    ogg_path = f"{temp_dir}/{filename}.ogg"
-    wav_path = f"{temp_dir}/{filename}.wav"
-
+    print("Downloading media")
     # Download the message
-    await message.download_media(file=ogg_path)
+    blob = await message.download_media(bytes)
 
-    # Transcode the telegram ogg file to a 16khz wav file for network consumption.
-    print("Transcoding")
-    transcode_output = subprocess.run(
-        ["ffmpeg", "-i", ogg_path, "-ar", "16000", wav_path], capture_output=True
-    )
-    if transcode_output.returncode != 0:
-        eprint("Detection failed!")
-        eprint("Stdout: {}".format(transcode_output.stdout.decode("utf-8")))
-        eprint("Stderr: {}".format(transcode_output.stderr.decode("utf-8")))
-        return
-
-    # Transcoding is done, we can clean up the ogg file.
-    os.remove(ogg_path)
-
-    # Run speech to text detection on wav file.
     print("Running detection")
-    detection_output = subprocess.run(
-        [
-            config["speech_to_text"]["path_to_binary"],
-            "--no-timestamps",
-            "--language",
-            "auto",
-            "--model",
-            config["speech_to_text"]["path_to_model"],
-            "--file",
-            wav_path,
-        ],
-        capture_output=True,
-    )
-    if detection_output.returncode != 0:
-        eprint("Detection failed!")
-        eprint("Stdout: {}".format(detection_output.stdout.decode("utf-8")))
-        eprint("Stderr: {}".format(detection_output.stderr.decode("utf-8")))
-        return
+    url = "http://localhost:9000/asr"
+    files = {"audio_file": blob}
+    response = requests.post(url, files=files)
 
-    # Detection is done, we can clean up the wav file.
-    os.remove(wav_path)
-
-    # Return output
-    return detection_output.stdout.decode("utf-8").strip()
+    return response.text
 
 
 def is_audio_message(message) -> bool:

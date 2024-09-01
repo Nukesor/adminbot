@@ -3,10 +3,9 @@
 import getpass
 import os
 import sys
-import uuid
 
-from telethon import events, types
 import requests
+from telethon import events, types
 
 from adminbot.sentry import handle_exceptions
 from adminbot.telethon import bot

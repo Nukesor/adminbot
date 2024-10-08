@@ -1,6 +1,7 @@
 """Simple helper functions."""
 
 from telethon import events
+from telethon.tl.types import User
 
 from adminbot.config import config
 from adminbot.sentry import handle_exceptions
@@ -42,7 +43,7 @@ async def print_chat_id(event):
 
 @bot.on(
     events.NewMessage(
-        pattern="\\\\message_id",
+        pattern="\\\\message_info",
         forwards=False,
         from_users=config["bot"]["admin"],
     )
@@ -57,6 +58,30 @@ async def print_message_id(event):
         response = "You have to reply to a message"
     else:
         referenced_message = await bot.get_messages(event.message.chat_id, ids=reply_id)
-        response = f"Message id is: {referenced_message.id}"
+        message_id = referenced_message.id
+        chat = referenced_message.chat
+
+        if isinstance(chat, User):
+            name = chat.username or chat.first_name
+            chat_id = chat.id
+        else:
+            name = chat.title
+            chat_id = chat.id
+
+        response = f"Message id is: {message_id}"
+        response += f"\nFrom chat '{name}' ({chat_id})"
+
+        forward = referenced_message.forward
+        if forward is not None:
+            chat = await forward.get_chat()
+
+            if isinstance(chat, User):
+                name = chat.username or chat.first_name
+                chat_id = chat.id
+            else:
+                name = chat.title
+                chat_id = chat.id
+
+            response += f"\nForwarded from chat '{name}' ({chat_id})"
 
     await event.edit(response)

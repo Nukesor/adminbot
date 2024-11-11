@@ -2,7 +2,8 @@
 
 import traceback
 
-from raven import Client
+import sentry_sdk
+from sentry_sdk import configure_scope
 
 from adminbot.config import config
 
@@ -20,27 +21,25 @@ class Sentry:
         """Construct new sentry wrapper."""
         if config["logging"]["sentry_enabled"]:
             self.initialized = True
-            self.sentry = Client(config["logging"]["sentry_token"])
+            sentry_sdk.init(config["logging"]["sentry_token"])
 
     def captureMessage(self, *args, **kwargs):
         """Capture message with sentry."""
-        if self.initialized:
-            if "tags" not in kwargs:
-                kwargs["tags"] = {}
+        if not self.initialized:
+            return
 
-            # Tag it as pollbot
-            kwargs["tags"]["bot"] = "pollbot"
-            self.sentry.captureMessage(*args, **kwargs)
+        with configure_scope() as scope:
+            scope.set_tag("bot", "adminbot")
+            sentry_sdk.captureMessage(*args, **kwargs)
 
     def captureException(self, *args, **kwargs):
         """Capture exception with sentry."""
-        if self.initialized:
-            if "tags" not in kwargs:
-                kwargs["tags"] = {}
+        if not self.initialized:
+            return
 
-            # Tag it as pollbot
-            kwargs["tags"]["bot"] = "pollbot"
-            self.sentry.captureException(*args, **kwargs)
+        with configure_scope() as scope:
+            scope.set_tag("bot", "adminbot")
+            sentry_sdk.captureException(*args, **kwargs)
 
 
 sentry = Sentry()

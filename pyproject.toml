@@ -13,11 +13,11 @@ python = "^3.12"
 sentry-sdk = "^2"
 telethon = "^1"
 toml = "^0.10"
-typer = "^0.13"
+typer = "^0.14"
 requests = "^2.32.3"
 
 [tool.poetry.dev-dependencies]
-ruff = "^0.7"
+ruff = "^0.8"
 types-toml = "^0.10"
 
 [build-system]

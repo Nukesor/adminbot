@@ -1,18 +1,18 @@
 default: run
 
 run:
-    poetry run python main.py run
+    uv run ./main.py run
 
 setup:
-    poetry install
+    uv sync
 
 lint:
-    poetry run ruff check ./adminbot --output-format=full
-    poetry run ruff format ./adminbot --diff
+    uv run ruff check ./adminbot --output-format=full
+    uv run ruff format ./adminbot --diff
 
 format:
-    poetry run ruff check --fix ./adminbot
-    poetry run ruff format ./adminbot
+    uv run ruff check --fix ./adminbot
+    uv run ruff format ./adminbot
 
 
 # Watch for something

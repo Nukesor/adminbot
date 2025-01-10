@@ -1,28 +1,24 @@
-[tool.poetry]
+[project]
 name = "adminbot"
 version = "0.0.1"
 description = "Simple bot that helps me administrate my chats."
-authors = ["Arne Beer <contact@arne.beer>"]
+authors = [{ name = "Arne Beer", email = "contact@arne.beer" }]
 license = "MIT"
-repository = "https://github.com/nukesor/admin-bot"
-package-mode = false
+requires-python = ">=3.13"
+dependencies = [
+  "alembic>=1",
+  "requests>=2.32.3",
+  "sentry-sdk>=2",
+  "telethon>=1",
+  "toml>=0.10",
+  "typer>=0.15",
+]
 
-[tool.poetry.dependencies]
-alembic = "^1"
-python = "^3.12"
-sentry-sdk = "^2"
-telethon = "^1"
-toml = "^0.10"
-typer = "^0.15"
-requests = "^2.32.3"
+[project.urls]
+Repository = "https://github.com/nukesor/admin-bot"
 
-[tool.poetry.dev-dependencies]
-ruff = "^0.8"
-types-toml = "^0.10"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.masonry.api"
+[tool.uv]
+dev-dependencies = ["ruff>=0.8", "types-toml>=0.10.8"]
 
 # Check the Ruff documentation for more info on how to configure this
 # General docs: https://docs.astral.sh/ruff/configuration/

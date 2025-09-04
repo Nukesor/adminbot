@@ -9,10 +9,12 @@ setup:
 lint:
     uv run ruff check ./adminbot --output-format=full
     uv run ruff format ./adminbot --diff
+    taplo format --check
 
 format:
     uv run ruff check --fix ./adminbot
     uv run ruff format ./adminbot
+    taplo format
 
 
 # Watch for something

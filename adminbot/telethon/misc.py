@@ -1,7 +1,7 @@
 """Simple helper functions."""
 
 from telethon import events
-from telethon.tl.types import User, Channel
+from telethon.tl.types import Channel, User
 
 from adminbot.config import config
 from adminbot.sentry import handle_exceptions

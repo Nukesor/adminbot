@@ -6,12 +6,12 @@ authors = [{ name = "Arne Beer", email = "contact@arne.beer" }]
 license = "MIT"
 requires-python = "==3.14.*"
 dependencies = [
-  "alembic>=1",
-  "requests>=2.32.3",
-  "sentry-sdk>=2",
-  "telethon>=1",
-  "toml>=0.10",
-  "typer>=0.15",
+  "alembic>=1.18.4",
+  "requests>=2.33.1",
+  "sentry-sdk>=2.58.0",
+  "telethon>=1.43.2",
+  "toml>=0.10.2",
+  "typer>=0.25.1",
 ]
 
 [project.urls]
@@ -22,7 +22,7 @@ venv = ".venv"
 venvPath = "."
 
 [dependency-groups]
-dev = ["ruff>=0.8", "types-toml>=0.10.8"]
+dev = ["ruff>=0.15.12", "types-toml>=0.10.8.20260408"]
 
 # Check the Ruff documentation for more info on how to configure this
 # General docs: https://docs.astral.sh/ruff/configuration/

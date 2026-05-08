@@ -1,4 +1,4 @@
-"""Config values for pollbot."""
+"""Config values for adminbot."""
 
 import os
 import sys
@@ -13,11 +13,6 @@ default_config = {
     },
     "bot": {
         "admin": "27755184",
-    },
-    "database": {
-        "pollbot_sql_uri": "",
-        "pollbot_connection_count": 5,
-        "pollbot_overflow_count": 5,
     },
     "logging": {
         "sentry_enabled": False,

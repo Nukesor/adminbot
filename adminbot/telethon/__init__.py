@@ -1,15 +1,18 @@
 """Telethon bot instance creation."""
 from telethon import TelegramClient
+import os
+
+from telethon.sessions import SQLiteSession
 
 from adminbot.config import config
 
+path = os.path.expanduser("~/.local/share/adminbot.sql")
 
 bot = TelegramClient(
-    "reddit_media_bot",
+    SQLiteSession(path),
     config["telegram"]["app_api_id"],
     config["telegram"]["app_api_hash"],
 )
-
 
 # Reexport for easy bot initialization
 from .misc import *

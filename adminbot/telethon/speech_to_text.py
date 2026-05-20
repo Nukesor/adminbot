@@ -26,6 +26,15 @@ async def speech_to_text(event):
     if not message.is_private or not is_audio_message(message):
         return
 
+    # Ignore all messages sent via inline bot queries.
+    if message.via_bot is not None:
+        return
+
+    # Ignore messages from the munukebot (only sends audio tracks, not voice messages).
+    sender = await message.get_sender()
+    if sender is not None and getattr(sender, "username", None) == "munukebot":
+        return
+
     print("Got audio message from private chat")
 
     # Try to detect text

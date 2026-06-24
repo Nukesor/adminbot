@@ -54,13 +54,16 @@ async def speech_to_text(event):
     # Not sure why, but the `from_id` can sometimes be None.
     # Just send the message to me in that case.
     if message.from_id is None:
+        print("Sending message into 'Saved messages' chat")
         await event.client.send_message("me", response)
         return
 
     peer_id, _ = get_peer_information(message.from_id)
     if peer_id == me.id or peer_id == "myself":
+        print("Sending message as reply")
         await event.reply(response)
     else:
+        print("Sending message into 'Saved messages' chat")
         await event.client.send_message("me", response)
 
 

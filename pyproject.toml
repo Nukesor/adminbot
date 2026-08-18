@@ -6,12 +6,12 @@ authors = [{ name = "Arne Beer", email = "contact@arne.beer" }]
 license = "MIT"
 requires-python = "==3.14.*"
 dependencies = [
-  "alembic>=1.18.5",
-  "requests>=2.34.2",
-  "sentry-sdk>=2.66.1",
-  "telethon>=1.44.0",
-  "toml>=0.10.2",
-  "typer>=0.27.0",
+  "alembic>=1",
+  "requests>=2",
+  "sentry-sdk>=2",
+  "telethon>=1",
+  "toml>=0.10",
+  "typer>=0.27",
 ]
 
 [project.urls]

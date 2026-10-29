@@ -30,7 +30,7 @@ dev = ["ruff>=0.16.9", "types-toml>=0.10.8.20260518"]
 [tool.ruff]
 line-length = 88
 indent-width = 4
-target-version = "py311"
+target-version = "py314"
 exclude = [".venv", "__init__.py"]
 
 [tool.ruff.lint]
